@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Bot.Connector;
+using SimpleBot.Dados;
+
 
 namespace SimpleBot
 {
@@ -32,6 +34,8 @@ namespace SimpleBot
 
             var message = new Message(userFromId, userFromName, text);
 
+          
+            
             string response = SimpleBotUser.Reply(message);
 
             await ReplyUserAsync(activity, response);

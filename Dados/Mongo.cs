@@ -8,10 +8,9 @@ using System.Web;
 
 namespace SimpleBot.Dados
 {
-    public class Mongo
+    public class Mongo : IDados
     {
         
-
         public void Inserir(Message message)
         {
             var cliente = new MongoClient();
@@ -28,7 +27,7 @@ namespace SimpleBot.Dados
             col.InsertOne(doc);
         }
 
-        public void InserirPerfil(string id,UserProfile profile)
+        public void InserirPerfil(string id, UserProfile profile)
         {
             var cliente = new MongoClient();
             var database = cliente.GetDatabase("Bot");
@@ -42,7 +41,7 @@ namespace SimpleBot.Dados
             var filter = Builders<BsonDocument>.Filter.Eq("Id", id);
             UpdateOptions options = new UpdateOptions();
             options.IsUpsert = true;
-            col.ReplaceOne(filter,doc, options );
+            col.ReplaceOne(filter, doc, options);
         }
 
         public UserProfile BuscarPerfilId(string id)
@@ -52,16 +51,24 @@ namespace SimpleBot.Dados
             var filtro = Builders<BsonDocument>.Filter.Eq("Id", id);
             var col = database.GetCollection<BsonDocument>("perfil");
             BsonDocument user = col.Find(filtro).FirstOrDefault();
-
-            return new UserProfile()
+            if (user != null)
             {
-                Id = user.GetValue("Id").ToString(),
-                Visitas =user.GetValue("Visitas").ToInt32()
+                return new UserProfile()
+                {
+                    Id = user.GetValue("Id").ToString(),
+                    Visitas = user.GetValue("Visitas").ToInt32()
+                };
+            }
+            return new UserProfile
+            {
+                Id = id,
+                Visitas = 0
             };
         }
 
-
-
-
+        public void AtualizarPerfil(UserProfile profile)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

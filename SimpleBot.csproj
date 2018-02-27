@@ -134,7 +134,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dados\IDados.cs" />
     <Compile Include="Dados\Mongo.cs" />
+    <Compile Include="Dados\SqlServer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

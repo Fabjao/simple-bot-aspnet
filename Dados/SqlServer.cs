@@ -10,23 +10,23 @@ namespace SimpleBot.Dados
 {
     public class SqlServer : IDados
     {
-        private SqlConnection con;
-        private SqlCommand cmd;
-        private SqlDataReader reader;
-        private static string _connectionString = @"Data Source=L2901MICRO16;Initial Catalog=Teste;Integrated Security=True";
 
+        private string _connectionString;// = @"Data Source=L2901MICRO16;Initial Catalog=Teste;Integrated Security=True";
+
+        public SqlServer(string connectionString)
+        {
+            this._connectionString = connectionString;
+        }
         //create table tb_teste(
         //id identity primary key,
         //Usuario varchar,
         //Visitas int)
         
         public UserProfile BuscarPerfilId(string id)
-        {
-            try
-            {                
-                using (con = new SqlConnection(_connectionString))
+        {                           
+                using (SqlConnection con = new SqlConnection(_connectionString))
                 {
-                    using (cmd = new SqlCommand())
+                    using (SqlCommand cmd = new SqlCommand())
                     {
                         con.Open();
                         cmd.Connection = con;
@@ -34,7 +34,7 @@ namespace SimpleBot.Dados
                         cmd.CommandText = "select Id,Usuario,Visitas from tb_teste where Usuario=@Usuario";
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@Usuario", id);
-                        reader = cmd.ExecuteReader();
+                       SqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
                             return new UserProfile()
@@ -45,12 +45,7 @@ namespace SimpleBot.Dados
                         }
                     }
                 }
-                return default(UserProfile);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                return default(UserProfile);           
         }
 
         public void Inserir(Message message)
@@ -60,12 +55,9 @@ namespace SimpleBot.Dados
 
         public void InserirPerfil(string id, UserProfile profile)
         {
-
-            try
-            {
-                using (con = new SqlConnection(_connectionString))
+                using (SqlConnection con = new SqlConnection(_connectionString))
                 {
-                    using (cmd = new SqlCommand())
+                    using (SqlCommand cmd = new SqlCommand())
                     {
                         con.Open();
                         cmd.Connection = con;
@@ -77,20 +69,13 @@ namespace SimpleBot.Dados
                         cmd.ExecuteNonQuery();                        
                     }
                 }                
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         public void AtualizarPerfil(UserProfile profile)
-        {
-            try
-            {
-                using (con = new SqlConnection(_connectionString))
+        {            
+                using (SqlConnection con = new SqlConnection(_connectionString))
                 {
-                    using (cmd = new SqlCommand())
+                    using (SqlCommand cmd = new SqlCommand())
                     {
                         con.Open();
                         cmd.Connection = con;
@@ -99,14 +84,10 @@ namespace SimpleBot.Dados
                         cmd.Parameters.Clear();
                         cmd.Parameters.AddWithValue("@Usuario",profile.Id);
                         cmd.Parameters.AddWithValue("@Visitas", profile.Visitas);
-                        reader = cmd.ExecuteReader();
+                        SqlDataReader reader = cmd.ExecuteReader();
                     }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
+                }           
+           
         }
     }
 }

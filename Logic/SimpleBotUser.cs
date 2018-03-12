@@ -11,23 +11,27 @@ namespace SimpleBot
     public class SimpleBotUser
     {
         static Dictionary<string, UserProfile> _perfil = new Dictionary<string, UserProfile>();
-        static IDados _dados = new Mongo();
+        static IUserRepo _dados = new MongoRepo();
         //private static string tipoBanco = "mongoDB"; //"SqlServer";//
         public static string Reply(Message message)
         {
             string userId = message.Id;
 
             UserProfile perfil = null;
-            Mongo mongo = new Mongo();;
-            perfil = mongo.BuscarPerfilId(userId);
+            //MongoRepo mongo = new MongoRepo();;
+            //perfil = mongo.BuscarPerfilId(userId);
 
-           // SqlServer sql = new SqlServer(ConfigurationManager.AppSettings["stringConexao"].ToString());
-          //  perfil = sql.BuscarPerfilId(userId);
+            SqlServerRepo sql = new SqlServerRepo(ConfigurationManager.AppSettings["stringConexao"].ToString());
+            perfil = sql.BuscarPerfilId(userId);
 
             perfil.Visitas += 1;
 
-            mongo.InserirPerfil(userId, perfil);
-            //sql.InserirPerfil(userId, perfil);
+            //mongo.InserirPerfil(perfil);
+            //mongo.SalvarHistorico(message);
+
+
+            sql.InserirPerfil(perfil);
+            //sql.SalvarHistorico(message);
 
             return $"{perfil.Id} conversou {perfil.Visitas}";
             // return $"{message.User} disse '{message.Text}'";

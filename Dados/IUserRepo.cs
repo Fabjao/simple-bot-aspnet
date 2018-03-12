@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SimpleBot.Dados
 {
-    public interface IDados
+    public interface IUserRepo
     {
-        void Inserir(Message message);
-        void InserirPerfil(string id, UserProfile profile);
+        void SalvarHistorico(Message message);        
         UserProfile BuscarPerfilId(string id);
         void AtualizarPerfil(UserProfile profile);
     }

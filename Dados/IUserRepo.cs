@@ -10,6 +10,6 @@ namespace SimpleBot.Dados
     {
         void SalvarHistorico(Message message);        
         UserProfile BuscarPerfilId(string id);
-        void AtualizarPerfil(UserProfile profile);
+        void SalvarPerfil(UserProfile profile);
     }
 }

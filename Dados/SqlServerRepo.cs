@@ -51,10 +51,12 @@ namespace SimpleBot.Dados
             return profile;
         }
 
-
-        public void InserirPerfil(UserProfile profile)
+        //Create table tb_historico(
+        //Id int identity primary key,
+        //Usuario varchar(100),
+        //Mensagem varchar(max))
+        public void SalvarHistorico(Message message)
         {
-
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 using (SqlCommand cmd = new SqlCommand())
@@ -62,18 +64,16 @@ namespace SimpleBot.Dados
                     con.Open();
                     cmd.Connection = con;
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "INSERT INTO tb_teste(Usuario,Visitas)VALUES(@id,@Visitas)";
                     cmd.Parameters.Clear();
-                    cmd.Parameters.Add(new SqlParameter("@id", profile.Id));
-                    cmd.Parameters.Add(new SqlParameter("@Visitas", profile.Visitas));
+                    cmd.Parameters.AddWithValue("@Usuario", message.User);
+                    cmd.Parameters.AddWithValue("@Mensagem", message.Text);
+                    cmd.CommandText = "INSERT INTO tb_historico(Usuario,Mensagem)VALUES(@Usuario,@Mensagem)";
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-
-
-        public void AtualizarPerfil(UserProfile profile)
+        public void SalvarPerfil(UserProfile profile)
         {
             using (SqlConnection con = new SqlConnection(_connectionString))
             {
@@ -82,19 +82,20 @@ namespace SimpleBot.Dados
                     con.Open();
                     cmd.Connection = con;
                     cmd.CommandType = CommandType.Text;
-                    cmd.CommandText = "UPDATE tb_teste set Visitas=@Visitas WHERE Usuario=@Usuario";
                     cmd.Parameters.Clear();
                     cmd.Parameters.AddWithValue("@Usuario", profile.Id);
                     cmd.Parameters.AddWithValue("@Visitas", profile.Visitas);
+                    if (profile.Visitas == 1) //Então significa que vai ser a primeira vez que vai salvar
+                    {
+                        cmd.CommandText = "INSERT INTO tb_teste(Usuario,Visitas)VALUES(@Usuario,@Visitas)";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE tb_teste set Visitas=@Visitas WHERE Usuario=@Usuario";
+                    }
                     cmd.ExecuteNonQuery();
                 }
             }
-
-        }
-
-        public void SalvarHistorico(Message message)
-        {
-            throw new NotImplementedException();
         }
     }
 }

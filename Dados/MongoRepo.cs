@@ -10,10 +10,7 @@ namespace SimpleBot.Dados
 {
     public class MongoRepo : IUserRepo
     {
-        public void AtualizarPerfil(UserProfile profile)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         public UserProfile BuscarPerfilId(string id)
         {
@@ -33,18 +30,7 @@ namespace SimpleBot.Dados
             }
             return user;
         }
-
-        public void InserirPerfil(UserProfile profile)
-        {
-            var cliente = new MongoClient();
-            var database = cliente.GetDatabase("Bot");
-            var col = database.GetCollection<UserProfile>("perfil");
-
-            var filter = Builders<UserProfile>.Filter.Eq("Id", profile.Id);
-
-            col.ReplaceOne(filter, profile, new UpdateOptions() { IsUpsert = true });
-        }
-
+        
         public void SalvarHistorico(Message message)
         {
             var cliente = new MongoClient();
@@ -61,5 +47,15 @@ namespace SimpleBot.Dados
             col.InsertOne(doc);
         }
 
+        public void SalvarPerfil(UserProfile profile)
+        {
+            var cliente = new MongoClient();
+            var database = cliente.GetDatabase("Bot");
+            var col = database.GetCollection<UserProfile>("perfil");
+
+            var filter = Builders<UserProfile>.Filter.Eq("Id", profile.Id);
+
+            col.ReplaceOne(filter, profile, new UpdateOptions() { IsUpsert = true });
+        }
     }
 }
